@@ -18,26 +18,26 @@ then
     done
 fi
 
+function dig()
+{
+    echo $tunnel
+    echo "seting up tunnels..."
+    echo -n "$(tput setaf 4)${1}:$(tput bold)$(tput setaf 7)${2} $(tput\
+    sgr0)--> $(tput setaf 5)${3}:$(tput bold)$(tput setaf 7)${4}$(tput\
+    sgr0)...."
+
+    ssh -D${2} -NCf -p${4} ${3}
+
+    if [ $? -eq 0 ]
+    then
+        echo "$(tput setaf 2)OK$(tput sgr0)"
+    else
+        echo "$(tput setaf 1)FAIL$(tput sgr0)"
+    fi
+}
+
 # --- digging ---
 # for more copy this and
 # increase tunnel number
-# -----------8<-----------------
 
-echo "seting up tunnels..."
-echo -n "$(tput setaf 4)\
-${tunnel_1[0]}:$(tput bold)$(tput setaf 7)\
-${tunnel_1[1]} $(tput sgr0)--> $(tput setaf 5)\
-${tunnel_1[2]}:$(tput bold)$(tput setaf 7)\
-${tunnel_1[3]}\
-$(tput sgr0)...."
-
-ssh -D${tunnel_1[1]} -NCf -p${tunnel_1[3]} ${tunnel_1[2]}
-
-if [ $? -eq 0 ]
-then
-    echo "$(tput setaf 2)OK$(tput sgr0)"
-else
-    echo "$(tput setaf 1)FAIL$(tput sgr0)"
-fi
-
-# -------------->8--------------
+dig $(echo ${tunnel_1[@]})
