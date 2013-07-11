@@ -6,11 +6,11 @@ tunnel_1=("localhost" "12345" "serverhost" "12345")
 # --- killing ---
 # old tunnels must die
 
-ps aux | grep "ssh -D" | head -n -1 >| /dev/null 2>| /dev/null
+ps aux | grep "ssh -D" | grep -v "grep" >| /dev/null 2>| /dev/null
 if [ $? -eq 0 ]
 then
     echo "killing all old tunnels..."
-    pids=$(ps aux | grep "ssh -D.*" | head -n -1 | awk '{print $2}')
+    pids=$(ps aux | grep "ssh -D.*" | grep -v "grep" | awk '{print $2}')
     for pid in $(echo ${pids})
     do
         echo "PID: $(tput bold)$pid$(tput sgr0)"
