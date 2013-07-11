@@ -20,7 +20,6 @@ fi
 
 function dig()
 {
-    echo $tunnel
     echo "seting up tunnels..."
     echo -n "$(tput setaf 4)${1}:$(tput bold)$(tput setaf 7)${2} $(tput\
     sgr0)--> $(tput setaf 5)${3}:$(tput bold)$(tput setaf 7)${4}$(tput\
