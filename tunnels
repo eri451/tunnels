@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # let your config take place here
-tunnel_1=("localhost" "12345" "serverhost" "12345")
+tunnel_1='bindhost 12345 user@serverhost 12345'
 
 # --- killing ---
 # old tunnels must die
@@ -20,12 +20,12 @@ fi
 
 function dig()
 {
-    echo "seting up tunnels..."
-    echo -n "$(tput setaf 4)${1}:$(tput bold)$(tput setaf 7)${2} $(tput\
-    sgr0)--> $(tput setaf 5)${3}:$(tput bold)$(tput setaf 7)${4}$(tput\
+    echo "setting up tunnels..."
+    echo -n  "$(tput setaf 4)${1}:$(tput bold)$(tput setaf 7)${2}$(tput\
+    sgr0) --> $(tput setaf 5)${3}:$(tput bold)$(tput setaf 7)${4}$(tput\
     sgr0)...."
 
-    ssh -D${2} -NCf -p${4} ${3}
+    ssh -D${1}:${2} -NCf -p${4} ${3}
 
     if [ $? -eq 0 ]
     then
