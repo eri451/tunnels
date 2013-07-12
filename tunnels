@@ -1,7 +1,12 @@
 #!/bin/bash
 
+# --- config ---
 # let your config take place here
-tunnel_1='bindhost 12345 user@serverhost 12345'
+# maybe with out user for usage with user that calls
+# e.g.
+#   tunnel_n='bindhost 12345 serverhost 12345'
+
+tunnel_1='bindhost 12345 serverhost 12345 user'
 
 # --- killing ---
 # old tunnels must die
@@ -14,22 +19,30 @@ then
     for pid in $(echo ${pids})
     do
         echo "PID: $(tput bold)$pid$(tput sgr0)"
-        kill $pid
+#        kill $pid
     done
 fi
 
 function dig()
 {
     echo "setting up tunnels..."
-    echo -n  "$(tput setaf 4)${1}:$(tput bold)$(tput setaf 7)${2}$(tput\
-    sgr0) --> $(tput setaf 5)${3}:$(tput bold)$(tput setaf 7)${4}$(tput\
-    sgr0)...."
-
-    ssh -D${1}:${2} -NCf -p${4} ${3}
-
-    if [ $? -eq 0 ]
+    if [ $# -eq 5 ]
     then
-        echo "$(tput setaf 2)OK$(tput sgr0)"
+        user=$(echo -n "${5}$(tput setaf 5)@")
+    else
+        user=""
+    fi
+
+#    ssh -D${1}:${2} -NCf -p${4} ${user}${3}
+    ret=$?
+
+    echo -n  "$(tput setaf 4)${1}:$(tput bold)$(tput setaf 7)${2}$(tput\
+    sgr0) --> $(tput setaf 14)${user}$(tput setaf 5)${3}:$(tput bold)$(tput\
+    setaf 7)${4}$(tput sgr0)...."
+
+    if [ $ret -eq 0 ]
+    then
+        echo "$(tput setaf 10)OK$(tput sgr0)"
     else
         echo "$(tput setaf 1)FAIL$(tput sgr0)"
     fi
