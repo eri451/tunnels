@@ -48,7 +48,7 @@ function dig()
 # --- digging ---
 
 echo -e "\nsetting up tunnels..."
-if [ -f "$HOME/.tunnel.conf" ]
+if [ -f "$HOME/.tunnels.conf" ]
 then
     while read line
     do
@@ -56,9 +56,9 @@ then
         then
             dig $(echo ${line[@]})
         fi
-    done < "$HOME/.tunnel.conf"
+    done < "$HOME/.tunnels.conf"
     exit 0
 else
-    echo "no ~/.tunnel.conf was found" >&2
+    echo "no ~/.tunnels.conf was found" >&2
     exit 1
 fi
