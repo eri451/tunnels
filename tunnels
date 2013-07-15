@@ -47,8 +47,6 @@ function dig()
 }
 
 # --- digging ---
-# for more copy this and
-# increase tunnel number
 
 if [ -f "$HOME/.tunnel.conf" ]
 then
