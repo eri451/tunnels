@@ -1,12 +1,10 @@
 #!/bin/bash
 
 # --- config ---
-# let your config take place here
-# maybe with out user for usage with user that calls
+# let your config take place in $HOME/.tunnels.conf
+# maybe with out user for usage with user who calls
 # e.g.
-#   tunnel_n='bindhost 12345 serverhost 12345'
-
-tunnel_1='bindhost 12345 serverhost 12345 user'
+# localhost 12345 serverhost 12345 user
 
 # --- killing ---
 # old tunnels must die
@@ -28,7 +26,7 @@ function dig()
     echo "setting up tunnels..."
     if [ $# -eq 5 ]
     then
-        user=$(echo -n "${5}$(tput setaf 5)@")
+        user=$(echo -n "${5}@")
     else
         user=""
     fi
@@ -52,4 +50,14 @@ function dig()
 # for more copy this and
 # increase tunnel number
 
-dig $(echo ${tunnel_1[@]})
+if [ -f "$HOME/.tunnel.conf" ]
+then
+    while read line
+    do
+        dig $(echo ${line[@]})
+    done < "$HOME/.tunnel.conf"
+    exit 0
+else
+    echo "no ~/.tunnel.conf was found" >&2
+    exit 1
+fi
