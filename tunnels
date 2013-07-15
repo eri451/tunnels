@@ -31,12 +31,12 @@ function dig()
         user=""
     fi
 
-    ssh -D${1}:${2} -NCf -p${4} ${user}${3}
-    ret=$?
-
     echo -n  "$(tput setaf 4)${1}:$(tput bold)$(tput setaf 7)${2}$(tput\
     sgr0) --> $(tput setaf 14)${user}$(tput setaf 5)${3}:$(tput bold)$(tput\
     setaf 7)${4}$(tput sgr0)...."
+
+    ssh -D${1}:${2} -NCf -p${4} ${user}${3}
+    ret=$?
 
     if [ $ret -eq 0 ]
     then
