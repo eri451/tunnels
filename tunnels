@@ -4,7 +4,7 @@
 # let your config take place in $HOME/.tunnels.conf
 # maybe with out user for usage with user who calls
 # e.g.
-# localhost 12345 serverhost 12345 user
+# bindhost 12345 serverhost 12345 user
 
 # --- killing ---
 # old tunnels must die
@@ -54,7 +54,10 @@ if [ -f "$HOME/.tunnel.conf" ]
 then
     while read line
     do
-        dig $(echo ${line[@]})
+        if [[ ! "'${line}'" =~ ^\'(\s*#.*|\s*)\' ]]
+        then
+            dig $(echo ${line[@]})
+        fi
     done < "$HOME/.tunnel.conf"
     exit 0
 else
