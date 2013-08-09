@@ -9,11 +9,11 @@
 # --- killing ---
 # old tunnels must die
 
-ps aux | grep "ssh -D" | grep -v "grep" >| /dev/null 2>| /dev/null
+ps aux | grep "ssh \(-L.*\|-D.*\)" | grep -v "grep" >| /dev/null 2>| /dev/null
 if [ $? -eq 0 ]
 then
     echo "killing all old tunnels..."
-    pids=$(ps aux | grep "ssh -D.*" | grep -v "grep" | awk '{print $2}')
+    pids=$(ps aux | grep "ssh \(-L*\|-D*}\)" | grep -v "grep" | awk '{print $2}')
     for pid in $(echo ${pids})
     do
         echo "PID: $(tput bold)$pid$(tput sgr0)"
@@ -23,18 +23,38 @@ fi
 
 function dig()
 {
-    if [ $# -eq 5 ]
+
+    if [ ${1} == "dyn" ]
     then
-        user=$(echo -n "${5}@")
-    else
-        user=""
+        if [ $# -eq 6 ]
+        then
+            user=$(echo -n "${6}@")
+        else
+            user=""
+        fi
+        echo "[$(tput setaf 3)${1}$(tput sgr0)] $(tput setaf 4)${2} $(tput\
+            bold)$(tput setaf 7)${3}$(tput sgr0) --> $(tput setaf\
+            14)${user}$(tput setaf 5)${4} $(tput bold)$(tput\
+            setaf 7)${5}$(tput sgr0)...."
+
+        opt="-D${2}:${3} -p${5} ${user}${4}"
+    elif [ ${1} == "loc" ]
+    then
+        if [ $# -eq 8 ]
+        then
+            user=$(echo -n "${8}@")
+        else
+            user=""
+        fi
+        echo "[$(tput setaf 3)${1}$(tput sgr0)] $(tput setaf 4)${2} $(tput\
+            bold)$(tput setaf 7)${3}:${4}:${5}$(tput sgr0) --> $(tput setaf\
+            14)${user}$(tput setaf 5)${6} $(tput bold)$(tput\
+            setaf 7)${7}$(tput sgr0)...."
+        opt="-L${3}:${4}:${5} -p${7} ${user}${6}"
     fi
 
-    echo "$(tput setaf 4)${1}:$(tput bold)$(tput setaf 7)${2}$(tput\
-    sgr0) --> $(tput setaf 14)${user}$(tput setaf 5)${3}:$(tput bold)$(tput\
-    setaf 7)${4}$(tput sgr0)...."
-
-    ssh -D${1}:${2} -NCf -p${4} ${user}${3}
+#    echo "ssh ${opt} -NCf -p${5} ${user}${4}"
+    ssh ${opt} -NCf
     ret=$?
 
     if [ $ret -eq 0 ]
