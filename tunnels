@@ -6,6 +6,59 @@
 # e.g.
 # bindhost 12345 serverhost 12345 user
 
+# --- functions ---
+function dyn()
+{
+    if [ $# -eq 6 ]
+    then
+        user=$(echo -n "${6}@")
+    else
+        user=""
+    fi
+    echo "[$(tput setaf 3)${1}$(tput sgr0)] $(tput setaf 4)${2} $(tput\
+        bold)$(tput setaf 7)${3}$(tput sgr0) --> $(tput setaf\
+        14)${user}$(tput setaf 5)${4} $(tput bold)$(tput\
+        setaf 7)${5}$(tput sgr0)...."
+
+        ssh -D${2}:${3} -NCf -p${5} ${user}${4}
+}
+
+function loc()
+{
+        if [ $# -eq 8 ]
+        then
+            user=$(echo -n "${8}@")
+        else
+            user=""
+        fi
+        echo "[$(tput setaf 3)${1}$(tput sgr0)] $(tput setaf 4)${2} $(tput\
+            bold)$(tput setaf 7)${3}:${4}:${5}$(tput sgr0) --> $(tput setaf\
+            14)${user}$(tput setaf 5)${6} $(tput bold)$(tput\
+            setaf 7)${7}$(tput sgr0)...."
+        ssh -L${3}:${4}:${5} -NCf -p${7} ${user}${6}
+}
+
+function dig()
+{
+
+    if [ ${1} == "dyn" ]
+    then
+        dyn $@
+    elif [ ${1} == "loc" ]
+    then
+        loc $@
+    fi
+
+    ret=$?
+
+    if [ $ret -eq 0 ]
+    then
+        echo "[CHECK $(tput setaf 10)✔$(tput sgr0)]"
+    else
+        echo "[FAIL $(tput setaf 1)✘$(tput sgr0)]"
+    fi
+}
+
 # --- killing ---
 # old tunnels must die
 
@@ -20,50 +73,6 @@ then
         kill $pid
     done
 fi
-
-function dig()
-{
-
-    if [ ${1} == "dyn" ]
-    then
-        if [ $# -eq 6 ]
-        then
-            user=$(echo -n "${6}@")
-        else
-            user=""
-        fi
-        echo "[$(tput setaf 3)${1}$(tput sgr0)] $(tput setaf 4)${2} $(tput\
-            bold)$(tput setaf 7)${3}$(tput sgr0) --> $(tput setaf\
-            14)${user}$(tput setaf 5)${4} $(tput bold)$(tput\
-            setaf 7)${5}$(tput sgr0)...."
-
-        opt="-D${2}:${3} -p${5} ${user}${4}"
-    elif [ ${1} == "loc" ]
-    then
-        if [ $# -eq 8 ]
-        then
-            user=$(echo -n "${8}@")
-        else
-            user=""
-        fi
-        echo "[$(tput setaf 3)${1}$(tput sgr0)] $(tput setaf 4)${2} $(tput\
-            bold)$(tput setaf 7)${3}:${4}:${5}$(tput sgr0) --> $(tput setaf\
-            14)${user}$(tput setaf 5)${6} $(tput bold)$(tput\
-            setaf 7)${7}$(tput sgr0)...."
-        opt="-L${3}:${4}:${5} -p${7} ${user}${6}"
-    fi
-
-#    echo "ssh ${opt} -NCf -p${5} ${user}${4}"
-    ssh ${opt} -NCf
-    ret=$?
-
-    if [ $ret -eq 0 ]
-    then
-        echo "[CHECK $(tput setaf 10)✔$(tput sgr0)]"
-    else
-        echo "[FAIL $(tput setaf 1)✘$(tput sgr0)]"
-    fi
-}
 
 # --- digging ---
 
