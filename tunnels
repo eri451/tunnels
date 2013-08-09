@@ -35,7 +35,7 @@ function loc()
             bold)$(tput setaf 7)${3}:${4}:${5}$(tput sgr0) --> $(tput setaf\
             14)${user}$(tput setaf 5)${6} $(tput bold)$(tput\
             setaf 7)${7}$(tput sgr0)...."
-        ssh -L${3}:${4}:${5} -NCf -p${7} ${user}${6}
+        ssh -L${2}:${3}:${4}:${5} -NCf -p${7} ${user}${6}
 }
 
 function dig()
@@ -66,7 +66,7 @@ ps aux | grep "ssh \(-L.*\|-D.*\)" | grep -v "grep" >| /dev/null 2>| /dev/null
 if [ $? -eq 0 ]
 then
     echo "killing all old tunnels..."
-    pids=$(ps aux | grep "ssh \(-L*\|-D*}\)" | grep -v "grep" | awk '{print $2}')
+    pids=$(ps aux | grep "ssh \(-L*\|-D.*\)" | grep -v "grep" | awk '{print $2}')
     for pid in $(echo ${pids})
     do
         echo "PID: $(tput bold)$pid$(tput sgr0)"
