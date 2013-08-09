@@ -12,30 +12,46 @@ function dyn()
     if [ $# -eq 6 ]
     then
         user=$(echo -n "${6}@")
-    else
+    elif [ $# -eq 5 ]
+    then
         user=""
+    else
+        echo "~/.tunnels.conf not readable\nnot enough arguments" >&2
+        return 2
     fi
     echo "[$(tput setaf 202)${1}$(tput sgr0)] $(tput setaf 238)${2} $(tput\
         bold)$(tput setaf 7)${3}$(tput sgr0) --> $(tput setaf\
         14)${user}$(tput setaf 129)${4} $(tput bold)$(tput\
         setaf 7)${5}$(tput sgr0)...."
 
-        ssh -D${2}:${3} -NCf -p${5} ${user}${4}
+    ssh -D${2}:${3} -NCf -p${5} ${user}${4}
 }
 
 function loc()
 {
-        if [ $# -eq 8 ]
-        then
-            user=$(echo -n "${8}@")
-        else
-            user=""
-        fi
-        echo "[$(tput setaf 215)${1}$(tput sgr0)] $(tput setaf 238)${2} $(tput\
-            bold)$(tput setaf 7)${3}:${4}:${5}$(tput sgr0) --> $(tput setaf\
-            14)${user}$(tput setaf 129)${6} $(tput bold)$(tput\
-            setaf 7)${7}$(tput sgr0)...."
-        ssh -L${2}:${3}:${4}:${5} -NCf -p${7} ${user}${6}
+    if [ $# -eq 8 ]
+    then
+        user=$(echo -n "${8}@")
+    elif [ $# -eq 7 ]
+    then
+        user=""
+    else
+        echo "~/.tunnels.conf not readable\n not enough arguments" >&2
+        return 2
+    fi
+    echo "[$(tput setaf 215)${1}$(tput sgr0)] $(tput setaf 238)${2} $(tput\
+        bold)$(tput setaf 7)${3}:${4}:${5}$(tput sgr0) --> $(tput setaf\
+        14)${user}$(tput setaf 129)${6} $(tput bold)$(tput\
+        setaf 7)${7}$(tput sgr0)...."
+
+    ssh -L${2}:${3}:${4}:${5} -NCf -p${7} ${user}${6}
+}
+
+function rem()
+{
+    # TODO
+    echo "$(tput setab 220)$(tput setaf 0)TODO$(tput sgr0)"
+    return 2
 }
 
 function dig()
@@ -47,6 +63,12 @@ function dig()
     elif [ ${1} == "loc" ]
     then
         loc $@
+    elif [ ${1} == "rem" ]
+    then
+        rem $@
+    else
+        echo "~/.tunnels.conf not readable" >&2
+        return 2
     fi
 
     ret=$?
