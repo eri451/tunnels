@@ -40,11 +40,10 @@ function loc()
 
 function dig()
 {
-
-    if [ ${1} == "dyn" ]
+    if [ ${1} = "dyn" ]
     then
         dyn $@
-    elif [ ${1} == "loc" ]
+    elif [ ${1} = "loc" ]
     then
         loc $@
     fi
